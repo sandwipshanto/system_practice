@@ -6,7 +6,7 @@
  * view their data. The component uses React hooks such as useState and useEffect to manage state and perform API calls.
  */
 
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import Postgres from './assets/postgresql.svg'
 import Redis from './assets/redis.svg'
 
@@ -21,7 +21,7 @@ function App() {
      * @param {string} userID - The ID of the user to fetch data for.
      * @returns {Promise<void>} - A Promise that resolves when the user data is fetched and set.
      */
-    await fetch(`http://127.0.0.1:80/api/v2/datapipeline/${userID}`)
+    await fetch(`http://${window.location.hostname}:80/api/v2/datapipeline/${userID}`)
       .then(response => response.json())
       .then(data => setUser(data))
       .catch(error => console.error(error))
@@ -29,12 +29,20 @@ function App() {
 
   useEffect(() => {
     // generate a list of users on mount
-    fetch(`http://127.0.0.1:80/api/v2/datapipeline/list-users`)
+    fetch(`http://${window.location.hostname}:80/api/v2/datapipeline/list-users`)
       .then(response => response.json())
       .then(data => {
-        setUsers(data)
+        if (Array.isArray(data)) {
+          setUsers(data)
+        } else {
+          console.error("API returned non-array:", data)
+          setUsers([])
+        }
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        console.error(error)
+        setUsers([])
+      })
   }, [])
 
   const renderUserData = () => {
@@ -91,16 +99,16 @@ function App() {
           {users.length === 0
             ? () => <p>No users found</p>
             : users.map(item => (
-                <ul key={item}>
-                  <li
-                    key={item}
-                    className="font-mono hover:cursor-pointer hover:text-blue-500"
-                    onClick={() => getUser(item)}
-                  >
-                    {item}
-                  </li>
-                </ul>
-              ))}
+              <ul key={item}>
+                <li
+                  key={item}
+                  className="font-mono hover:cursor-pointer hover:text-blue-500"
+                  onClick={() => getUser(item)}
+                >
+                  {item}
+                </li>
+              </ul>
+            ))}
         </div>
         <div>
           <div className="sticky top-10">

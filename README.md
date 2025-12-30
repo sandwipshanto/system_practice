@@ -78,6 +78,33 @@ Then head over to the URL to access the front end to see where the data is store
 ```text
 http://120.0.0.1:5173
 ```
+
+## Operating a Living System (Linux Operations Guide)
+
+Since this project is now running on your Ubuntu VM, here is how you can monitor and manage it like a real production system.
+
+### 1. Basic Status Checks
+- **Check running containers**: `docker compose ps` (Shows what's up and what ports are used).
+- **View live logs**: `docker compose logs -f` (Follow logs in real-time).
+- **Check specific service logs**: `docker compose logs -f pipeline` (Focus on the ETL process).
+
+### 2. Managing the System
+- **Stop everything**: `docker compose stop`
+- **Start everything**: `docker compose start`
+- **Restart after changes**: `docker compose up -d` (Docker is smart; it only restarts what changed).
+- **Auto-restart on Reboot**: The `restart: unless-stopped` policy in `docker-compose.yml` ensures that if your VM restarts, Docker will automatically start your containers back up.
+
+### 3. Linux & System Learning Exercises
+Here are some "tasks" you can do to practice Linux skills using this project:
+
+- **Resource Monitoring**: Run `htop` (you might need to install it: `sudo apt install htop`). Find the Python and Postgres processes and see how much CPU/RAM they use.
+- **Disk Usage**: Use `df -h` to see your VM's disk space. Use `du -sh ~/system_practice` to see how big the project folder is.
+- **Log Grepping**: Find errors in your logs without scrolling: `docker compose logs | grep ERROR`.
+- **Database Exploration**: Exec into the database to run queries manually:
+  `docker exec -it system_practice-postgres-1 psql -U postgres -d prac_db`
+- **Networking**: Use `netstat -tuln` or `ss -tuln` to see all ports currently listening on your Ubuntu VM. You should see `5173` and `5433` there.
+
+---
 ## ⭐ Stargazers
 
 <div align="center">

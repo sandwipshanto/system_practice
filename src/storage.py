@@ -1,19 +1,4 @@
-"""
-This module provides functions for storing and retrieving user data using Redis and PostgreSQL.
-
-The module includes the following functions:
-- add_user_to_redis: Adds user data to Redis for caching.
-- get_user_from_redis: Retrieves user data from Redis based on the given key.
-- create_user_table: Creates the users table in PostgreSQL.
-- create_address_table: Creates the users_address table in PostgreSQL.
-- check_table_exists: Checks if a table exists in PostgreSQL.
-- insert_into_user_table: Inserts user data into the users table in PostgreSQL.
-- insert_into_address_table: Inserts user address data into the users_address table in PostgreSQL.
-
-The module also includes a basic logging configuration for logging INFO and ERROR messages.
-
-Note: The module assumes that Redis and PostgreSQL are running and accessible.
-"""
+import os
 import logging
 from datetime import datetime
 from typing import Literal
@@ -21,54 +6,28 @@ from typing import Literal
 import psycopg2
 import redis
 from redis import RedisError
-from simple_chalk import red
+from simple_chalk import red, green, yellow
+
+# Load configuration from environment
+DB_NAME = os.getenv("POSTGRES_DB", "postgres")
+DB_USER = os.getenv("POSTGRES_USER", "postgres")
+DB_PASS = os.getenv("POSTGRES_PASSWORD", "password")
+DB_HOST = os.getenv("POSTGRES_HOST", "postgres")
+DB_PORT = os.getenv("POSTGRES_PORT", "5432")
+
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
-
-# ... (existing code)
-import logging
-from datetime import datetime
-from typing import Literal
-
-import psycopg2
-import redis
-from redis import RedisError
-from simple_chalk import red
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
-)
-
-"""
-REDIS ----------------------------------------------------------------------------------
-"""
-
 
 # REDIS connection
-redis = redis.Redis(host="redis", port=6379, decode_responses=True)
+redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
 
 def add_user_to_redis(user_data: list, user_address_data: list) -> None:
-    """Add user to Redis for caching
-
-    Combine the user and users address data into one dictionary to cache into Redis
-    under the same uid. A TTL of 2mins is also set to each key to keep the Redis cache
-    as fresh as possible.
-
-    Agrs:
-        user_data: A list of a JSON dicts
-        users_address_data: A list of JSON dicts
-
-    Returns:
-        Nothing
-
-    Raises:
-        ValueError: If any values are incorrect
-    """
     try:
         for ud, uad in zip(user_data, user_address_data):
             uid: str = ud.get("uid")
@@ -95,10 +54,10 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
             full_user_data: dict = users_data | address_data
 
             # Add user to Redis
-            redis.hset(uid, mapping=full_user_data)
+            redis_client.hset(uid, mapping=full_user_data)
 
             # Set TTL in Redis for 2 min
-            redis.expire(uid, 120)
+            redis_client.expire(uid, 120)
 
         logging.info(
             f"{red(len(user_data))} Users have been cached in Redis, with a TTL of 2 mins"
@@ -109,23 +68,11 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
 
 
 def get_user_from_redis(key: str) -> dict:
-    """
-    Retrieve user data from Redis based on the given key.
-
-    Args:
-        key (str): The key to look up in Redis.
-
-    Returns:
-        dict: The user data if the key exists; otherwise, an empty dictionary.
-
-    Raises:
-        redis.RedisError: If there's an error in executing the Redis command.
-    """
     try:
         data = {}
 
-        if redis.exists(key):
-            data: dict = redis.hgetall(key)
+        if redis_client.exists(key):
+            data: dict = redis_client.hgetall(key)
         else:
             logging.error(f"Key {red(key)} not found in Redis. Trying Postgres...")
 
@@ -136,21 +83,10 @@ def get_user_from_redis(key: str) -> dict:
         raise e
 
 
-"""
-POSTGRES -------------------------------------------------------------------------------
-"""
-
-
 def create_user_table() -> Literal[True]:
-    """
-    Create users table
-
-    Returns:
-        Literal True
-    """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="postgres"
+            dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -178,15 +114,9 @@ def create_user_table() -> Literal[True]:
 
 
 def create_address_table() -> Literal[True]:
-    """
-    Create users_address table
-
-    Returns:
-        Literal True
-    """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="postgres"
+            dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -215,10 +145,9 @@ def create_address_table() -> Literal[True]:
 
 
 def check_table_exists(table_name):
-    """Check if table exists"""
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="postgres"
+            dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -238,16 +167,9 @@ def check_table_exists(table_name):
 
 
 def insert_into_user_table(user_data: dict) -> Literal[True]:
-    """
-    INSERT user data into users table
-
-    Returns:
-        Literal True
-    """
-
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="postgres"
+            dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -280,15 +202,9 @@ def insert_into_user_table(user_data: dict) -> Literal[True]:
 
 
 def insert_into_address_table(address_data: dict) -> Literal[True]:
-    """
-    INSERT users address data into users_address table
-
-    Returns:
-        Literal True
-    """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="postgres"
+            dbname=DB_NAME, user=DB_USER, password=DB_PASS, host=DB_HOST, port=DB_PORT
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(

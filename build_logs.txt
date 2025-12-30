@@ -1,0 +1,132 @@
+﻿docker : --progress is a global 
+compose flag, better use `docker 
+compose --progress xx build ...
+At line:1 char:1
++ docker compose build 
+--progress=plain pipeline 2>&1 | 
+Out-File -FileP ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpe 
+   cified: (--progress is a...ss xx  
+   build ...:String) [], RemoteExc   
+ eption
+    + FullyQualifiedErrorId : Native 
+   CommandError
+ 
+time="2025-12-28T19:51:02+06:00" 
+level=warning msg="C:\\Users\\TechnoN
+ext\\Desktop\\system_practice\\docker
+-compose.yml: the attribute 
+`version` is obsolete, it will be 
+ignored, please remove it to avoid 
+potential confusion"
+#1 [internal] load local bake definitions
+#1 reading from stdin 572B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 937B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.10-slim
+#3 DONE 0.3s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 409B done
+#4 DONE 0.0s
+
+#5 [1/8] FROM docker.io/library/python:3.10-slim@sha256:fb1feae978f1729094eb0405e5f9564e55b2b3b24db3261d30ba4f22c5001a8a
+#5 resolve docker.io/library/python:3.10-slim@sha256:fb1feae978f1729094eb0405e5f9564e55b2b3b24db3261d30ba4f22c5001a8a 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 2.70kB 0.0s done
+#6 DONE 0.0s
+
+#7 [2/8] WORKDIR /app
+#7 CACHED
+
+#8 [3/8] COPY Pipfile Pipfile.lock /app/
+#8 CACHED
+
+#9 [4/8] RUN python -m pip install --upgrade pip
+#9 CACHED
+
+#10 [5/8] RUN pip install pipenv && pipenv install --dev --system --deploy
+#10 0.742 Collecting pipenv
+#10 0.901   Downloading pipenv-2026.0.3-py3-none-any.whl.metadata (17 kB)
+#10 0.937 Collecting certifi (from pipenv)
+#10 0.986   Downloading certifi-2025.11.12-py3-none-any.whl.metadata (2.5 kB)
+#10 1.032 Collecting packaging>=22 (from pipenv)
+#10 1.083   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#10 1.092 Requirement already satisfied: setuptools>=67 in /usr/local/lib/python3.10/site-packages (from pipenv) (79.0.1)
+#10 1.344 Collecting virtualenv>=20.24.2 (from pipenv)
+#10 1.402   Downloading virtualenv-20.35.4-py3-none-any.whl.metadata (4.6 kB)
+#10 1.442 Collecting distlib<1,>=0.3.7 (from virtualenv>=20.24.2->pipenv)
+#10 1.490   Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+#10 1.525 Collecting filelock<4,>=3.12.2 (from virtualenv>=20.24.2->pipenv)
+#10 1.576   Downloading filelock-3.20.1-py3-none-any.whl.metadata (2.1 kB)
+#10 1.611 Collecting platformdirs<5,>=3.9.1 (from virtualenv>=20.24.2->pipenv)
+#10 1.662   Downloading platformdirs-4.5.1-py3-none-any.whl.metadata (12 kB)
+#10 1.708 Collecting typing-extensions>=4.13.2 (from virtualenv>=20.24.2->pipenv)
+#10 1.757   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#10 1.821 Downloading pipenv-2026.0.3-py3-none-any.whl (2.4 MB)
+#10 2.287    ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 2.4/2.4 MB 4.2 MB/s  0:00:00
+#10 2.344 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#10 5.325 Downloading virtualenv-20.35.4-py3-none-any.whl (6.0 MB)
+#10 6.776    ΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöüΓöü 6.0/6.0 MB 4.0 MB/s  0:00:01
+#10 6.825 Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+#10 6.994 Downloading filelock-3.20.1-py3-none-any.whl (16 kB)
+#10 7.048 Downloading platformdirs-4.5.1-py3-none-any.whl (18 kB)
+#10 7.107 Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#10 7.174 Downloading certifi-2025.11.12-py3-none-any.whl (159 kB)
+#10 7.236 Installing collected packages: distlib, typing-extensions, platformdirs, packaging, filelock, certifi, virtualenv, pipenv
+#10 8.172 
+#10 8.174 Successfully installed certifi-2025.11.12 distlib-0.4.0 filelock-3.20.1 packaging-25.0 pipenv-2026.0.3 platformdirs-4.5.1 typing-extensions-4.15.0 virtualenv-20.35.4
+#10 8.174 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#10 8.755 Warning: Your Pipfile requires "python_version" 3.11, but you are using 3.10.19 
+#10 8.755 from //usr/local/bin/python3.
+#10 8.756 Usage: pipenv install [OPTIONS] [PACKAGES]...
+#10 8.756 
+#10 8.757 ERROR:: Aborting deploy
+#10 ERROR: process "/bin/sh -c pip install pipenv && pipenv install --dev --system --deploy" did not complete successfully: exit code: 2
+------
+ > [5/8] RUN pip install pipenv && pipenv install --dev --system --deploy:
+7.174 Downloading certifi-2025.11.12-py3-none-any.whl (159 kB)
+7.236 Installing collected packages: distlib, typing-extensions, platformdirs, packaging, filelock, certifi, virtualenv, pipenv
+8.172 
+8.174 Successfully installed certifi-2025.11.12 distlib-0.4.0 filelock-3.20.1 packaging-25.0 pipenv-2026.0.3 platformdirs-4.5.1 typing-extensions-4.15.0 virtualenv-20.35.4
+8.174 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+8.755 Warning: Your Pipfile requires "python_version" 3.11, but you are using 3.10.19 
+8.755 from //usr/local/bin/python3.
+8.756 Usage: pipenv install [OPTIONS] [PACKAGES]...
+8.756 
+8.757 ERROR:: Aborting deploy
+------
+Dockerfile:18
+
+--------------------
+
+  16 |     COPY Pipfile Pipfile.lock 
+/app/
+
+  17 |     RUN python -m pip install 
+--upgrade pip
+
+  18 | >>> RUN pip install pipenv && 
+pipenv install --dev --system 
+--deploy
+
+  19 |     
+
+  20 |     # Install async-timeout 
+and numpy
+
+--------------------
+
+failed to solve: process "/bin/sh -c 
+pip install pipenv && pipenv install 
+--dev --system --deploy" did not 
+complete successfully: exit code: 2
+
